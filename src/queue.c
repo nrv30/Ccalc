@@ -15,7 +15,10 @@ void allocQueue(Queue* queue)
     for (int i = 0; i < queue->capacity; i++) 
     {
         queue->head_pt[i] = (char*)malloc(sizeof(char) * QUEUE_ELEM_SIZE);
-        assert(queue->head_pt[i] != 0 && queue->head_pt[i] != NULL);
+        if (!queue->head_pt[i]) {
+            printf("Queue Error: failed reallocating memory for a string");
+            exit(1); 
+        }
     }
 }
 
@@ -31,9 +34,6 @@ void enQueue(Queue* queue, char* data)
         resizeQueue(queue); 
     }
 
-    printf("tail index: %d\n", queue->tail);
-    printf("dest ptr: %p\n", (void*)queue->head_pt[queue->tail]);
-    assert(queue->head_pt[queue->tail] != NULL);
     strcpy(queue->head_pt[queue->tail], data);   
     queue->tail++;
 }
@@ -42,20 +42,17 @@ void resizeQueue(Queue* queue)
 {
     printf("reached this on iteration %d\n", queue->tail);
     queue->capacity *= 2;
-    char** temp = (char**) realloc(queue->head_pt, queue->capacity);
-    if (temp == NULL) {
-        printf("stack overflow error\n");
+    queue->head_pt = (char**) realloc(queue->head_pt, queue->capacity);
+    if (!queue->head_pt) {
+        printf("Queue Error: failed reallocating memory for head");
         exit(1);
     }
-    queue->head_pt = temp;
 
-    for(int i = queue->head; i < queue->capacity-1; i++) {
-        char* temp_pt = (char*)malloc(sizeof(char) * QUEUE_ELEM_SIZE);
-        if (temp_pt == NULL) {
-            printf("Error: failed reallocating memory");
+    for(int i = queue->tail; i < queue->capacity; i++) {
+        queue->head_pt[i] = (char*)malloc(sizeof(char) * QUEUE_ELEM_SIZE);
+        if (!queue->head_pt[i]) {
+            printf("Queue Error: failed reallocating memory for a string");
             exit(1); 
-        } else {
-            queue->head_pt[i] = temp_pt;
         }
     }
 }
@@ -80,6 +77,8 @@ void printQueue(Queue* queue)
         // printf("%d ", i);
         printf("%s ", queue->head_pt[i]);
     }
+
+    printf("\n");
 }
 
 void freeQueue(Queue* queue) {

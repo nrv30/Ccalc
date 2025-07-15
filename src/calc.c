@@ -71,7 +71,6 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
     printf("%s\n", equation);
 
     for( tok = strtok_r(equation," ", &equation); tok!=NULL ; tok=strtok_r(NULL," ", &equation)) {
-        printf("tok: %s\n", tok);
         tokCount++;
         float num;
         // if token is number enqueue it
@@ -80,13 +79,12 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
         // token is operator
         } else {
             int prec = getPrec(tok);
-            printf("%d\n", prec);
+            // printf("%d\n", prec);
             switch(prec) 
             {
                 // One of these: *, /, +, -
                 case 1:
                 case 2:
-                printf("Was reached\n");
                     if (!isEmpty(stack)) {
                         int next_prec = getPrec(peek(stack));
                         // enqueue the previous next if it was smaller or the same precedence
@@ -95,7 +93,6 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
                             next_prec = getPrec(peek(stack));
                         }
                     }
-                    printf("was this reached");
                     push(stack, tok);
                     break;
                 case 3:
@@ -135,13 +132,14 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
         //     exit(1);
 
         // }
+        
+        printf("tok: %s\n", tok);
         printf("iteration: %d ", tokCount);
         printf("stack is ");
         printStack(stack);
-        printf("\n");
         printf("queue is ");
         printQueue(outQueue);
-        printf("\n");
+        printf("------\n");
     }
     free(equation);
 
@@ -174,7 +172,7 @@ int getPrec(char* tok)
 void cleanStack(Stack* stack, Queue* outQueue) 
 {
     for (int i = stack->count - 1; i > -1; i--) {
-        printf("stack at top %s ", stack->top[i]);
+        // printf("stack at top %s ", stack->top[i]);
         enQueue(outQueue, stack->top[i]);
     }
 }
