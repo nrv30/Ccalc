@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "../include/queue.h"
+#include "queue.h"
 
 int main(void) {
     printf("------test Queue-----\n");
@@ -25,7 +25,7 @@ int main(void) {
     enQueue(&queue, data[i]);
     }
 
-    //freeQueue(&queue);    
-    //printQueue(&queue);
+    printQueue(&queue);
+    freeQueue(&queue);    
     return 0;
 }

@@ -12,6 +12,7 @@ void allocStack(Stack* stack);
 void push(Stack* stack, char* op);
 char* pop(Stack* stack);
 char* tostring(Stack* stack);
+void printStack(Stack* stack);
 void resizeStack(Stack* stack);
 char* peek(Stack* stack);
 bool isEmpty(Stack* stack);
