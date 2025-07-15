@@ -6,7 +6,7 @@
 
 #include "../include/stack.h"
 
-const int ELEM_SIZE = 64;
+const int STACK_ELEM_SIZE = 64;
 
 void allocStack(Stack* stack) 
 {
@@ -15,7 +15,7 @@ void allocStack(Stack* stack)
 
     for (int i = 0; i < stack->capacity; i++) 
     {
-        stack->top[i] = (char*)malloc(sizeof(char) * ELEM_SIZE);
+        stack->top[i] = (char*)malloc(sizeof(char) * STACK_ELEM_SIZE);
     }
 }
 
@@ -63,7 +63,7 @@ void resizeStack(Stack* stack)
 
     // allocate space for the strings
     for(int i = stack->count + 1; i < stack->capacity; i++) {
-        char* temp_pt = (char*)malloc(sizeof(char) * ELEM_SIZE);
+        char* temp_pt = (char*)malloc(sizeof(char) * STACK_ELEM_SIZE);
         if (temp_pt == NULL) {
             printf("Error: failed reallocating memory");
             exit(1); 
@@ -73,6 +73,7 @@ void resizeStack(Stack* stack)
     }
 }
 
+// for the tests
 char* tostring(Stack* stack) 
 {
     char* stack_buf = malloc(sizeof(char) * 256);
@@ -82,6 +83,13 @@ char* tostring(Stack* stack)
         strcat(stack_buf, temp);
     }
     return stack_buf;
+}
+
+void printStack(Stack* stack) 
+{
+    for (int i = 0; i < stack->count; i++) {
+        printf("%s, ", stack->top[i]);
+    }
 }
 
 char* peek(Stack* stack) 

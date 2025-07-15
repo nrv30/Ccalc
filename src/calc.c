@@ -4,8 +4,8 @@
 #include <assert.h>
 #include <string.h>
 
-#include "../include/stack.h"
-#include "../include/queue.h"
+#include "stack.h"
+#include "queue.h"
 
  // gcc -Wall -Wextra -g -o calccli calc.c stack.c queue.c
 
@@ -18,6 +18,7 @@ typedef enum  {
     INVALID = -1
 } opPrec;
 
+// returns number of tokens or -1 if fails
 int make_OutputQueue(Stack* stack, Queue* outQueue);
 int getPrec(const char* tok);
 void cleanStack(Stack* stack, Queue* outQueue);
@@ -32,7 +33,7 @@ int main(void)
     outQueue.capacity = 5;
     allocQueue(&outQueue);
 
-    const int minLen = 3;
+    const int minLen = 3; // smallest equation
     int tokCount = 0;
     int loopCount = 0; 
     do {
@@ -43,14 +44,10 @@ int main(void)
         }
         loopCount++;
         stack.count = 0;
-        outQueue.head = 0;
+        outQueue.head = -1;
         outQueue.tail = -1;
         tokCount = make_OutputQueue(&stack, &outQueue); 
     } while (tokCount < minLen || tokCount == -1 || tokCount == 0);
-
-     printf("-----testing-----");
-    //printStack(stack);
-    printQueue(&outQueue);
 
     return 0;
 }
@@ -58,24 +55,22 @@ int main(void)
 // 3 + 4 * ( 2 - 1 ) * 6 + 8
 // answer: 3421-*6*+8+
 
-// returns number of tokens or -1 if fails
 int make_OutputQueue(Stack* stack, Queue* outQueue) 
 {
     const int maxEquation = 1024;
-    char* buf = (char*)malloc(sizeof(maxEquation));
-
+    char* equation = (char*)malloc(sizeof(char)* maxEquation);
+    
     int tokCount = 0;
     char* tok;
 
-    // puts the equation in buff
     printf(">> ");
-    fgets(buf, maxEquation, stdin);
-    buf[strlen(buf)-1] = '\0'; // get rid of newline
-    if (buf == NULL) exit(1);
+    fgets(equation, maxEquation, stdin);
+    equation[strlen(equation)-1] = '\0'; // get rid of newline
+    if (equation == NULL) exit(1);
 
-    printf("%s\n", buf);
+    printf("%s\n", equation);
 
-    for( tok = strtok_r(buf," ", &buf); tok!=NULL ; tok=strtok_r(NULL," ", &buf)) {
+    for( tok = strtok_r(equation," ", &equation); tok!=NULL ; tok=strtok_r(NULL," ", &equation)) {
         printf("tok: %s\n", tok);
         tokCount++;
         float num;
@@ -87,7 +82,7 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
             int prec = getPrec(tok);
             switch(prec) 
             {
-                // *, /, +, -
+                // One of these: *, /, +, -
                 case 1:
                 case 2:
                     if (!isEmpty(stack)) {
@@ -108,33 +103,35 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
                         enQueue(outQueue, pop(stack));
                     } while(strcmp(peek(stack), "(") != 0); // this
                     pop(stack); // get rid of open paren
-                    printQueue(outQueue);
-                    printStack(stack);
+                    // printQueue(outQueue);
+                    // printStack(stack);
                     break;
                 case 0:
                     printf("Quitting Successfully");
+                    free(equation);
                     return 0;
                 case -1:
                     printf("error: invalid symbol '%s'", tok);
+                    free(equation);
                     return -1;
             }
                  
         }
-        if (tokCount == 10) {
-            char** p;
-            printf("head: %d, tail: %d: ", outQueue->head, outQueue->tail);
-            for (int i = outQueue->head; i < outQueue->tail; i++) {
-            p = (char** )((outQueue->head_pt) + i);
-            assert(p != NULL);
-            // printf("%p\n", p);
-            }
+        // if (tokCount == 10) {
+        //     char** p;
+        //     printf("head: %d, tail: %d: ", outQueue->head, outQueue->tail);
+        //     for (int i = outQueue->head; i < outQueue->tail; i++) {
+        //     p = (char** )((outQueue->head_pt) + i);
+        //     assert(p != NULL);
+        //     // printf("%p\n", p);
+        //     }
 
-            printf("p = %p, *p = %p\n", (void*)p, (void*)*p);
-            char c = **p;
-            // printf("%c", c);
-            exit(1);
+        //     printf("p = %p, *p = %p\n", (void*)p, (void*)*p);
+        //     // char c = **p;
+        //     // printf("%c", c);
+        //     exit(1);
 
-        }
+        // }
         printf("iteration: %d ", tokCount);
         printf("stack is ");
         printStack(stack);
@@ -143,7 +140,7 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
         printQueue(outQueue);
         printf("\n");
     }
-    free(buf);
+    free(equation);
 
     if (!isEmpty(stack)) 
     {
@@ -169,7 +166,7 @@ int getPrec(const char* tok)
     else if (tok[0] == 'Q' || tok[0] == 'q') {
         return 0;
     }
-    else {return -1;}
+    else return -1;
 }
 
 void cleanStack(Stack* stack, Queue* outQueue) 

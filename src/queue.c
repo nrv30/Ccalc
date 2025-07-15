@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "../include/queue.h"
-const int ELEM_SIZE = 64;
+#include "queue.h"
+const int QUEUE_ELEM_SIZE = 64;
 
 void allocQueue(Queue* queue) 
 {
@@ -14,7 +14,7 @@ void allocQueue(Queue* queue)
 
     for (int i = 0; i < queue->capacity; i++) 
     {
-        queue->head_pt[i] = (char*)malloc(sizeof(char) * ELEM_SIZE);
+        queue->head_pt[i] = (char*)malloc(sizeof(char) * QUEUE_ELEM_SIZE);
         assert(queue->head_pt[i] != 0 && queue->head_pt[i] != NULL);
     }
 }
@@ -31,7 +31,10 @@ void enQueue(Queue* queue, char* data)
         resizeQueue(queue); 
     }
 
-    memmove(queue->head_pt[queue->tail], data, strlen(data) + 1);    
+    printf("tail index: %d\n", queue->tail);
+    printf("dest ptr: %p\n", (void*)queue->head_pt[queue->tail]);
+    assert(queue->head_pt[queue->tail] != NULL);
+    strcpy(queue->head_pt[queue->tail], data);   
     queue->tail++;
 }
 
@@ -47,7 +50,7 @@ void resizeQueue(Queue* queue)
     queue->head_pt = temp;
 
     for(int i = queue->head; i < queue->capacity-1; i++) {
-        char* temp_pt = (char*)malloc(sizeof(char) * ELEM_SIZE);
+        char* temp_pt = (char*)malloc(sizeof(char) * QUEUE_ELEM_SIZE);
         if (temp_pt == NULL) {
             printf("Error: failed reallocating memory");
             exit(1); 
@@ -79,12 +82,12 @@ void printQueue(Queue* queue)
     }
 }
 
-// void freeQueue(Queue* queue) {
-//     // for (int i = queue->head; i < queue->tail; i++) {
-//     //     free(queue->head_pt[i]);
-//     // }
+void freeQueue(Queue* queue) {
+    for (int i = queue->head; i < queue->tail; i++) {
+        free(queue->head_pt[i]);
+    }
 
-//     // free (queue->head_pt);
-//     printf("HEAD: %d\n", queue->head);
-//     printf("Tail: %d\n", queue->tail);
-// }
+    free (queue->head_pt);
+    //printf("HEAD: %d\n", queue->head);
+    //printf("Tail: %d\n", queue->tail);
+}
