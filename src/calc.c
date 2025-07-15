@@ -20,7 +20,7 @@ typedef enum  {
 
 // returns number of tokens or -1 if fails
 int make_OutputQueue(Stack* stack, Queue* outQueue);
-int getPrec(const char* tok);
+int getPrec(char* tok);
 void cleanStack(Stack* stack, Queue* outQueue);
 
 int main(void) 
@@ -43,7 +43,7 @@ int main(void)
             return 0;
         }
         loopCount++;
-        stack.count = 0;
+        stack.count = -1;
         outQueue.head = -1;
         outQueue.tail = -1;
         tokCount = make_OutputQueue(&stack, &outQueue); 
@@ -80,11 +80,13 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
         // token is operator
         } else {
             int prec = getPrec(tok);
+            printf("%d\n", prec);
             switch(prec) 
             {
                 // One of these: *, /, +, -
                 case 1:
                 case 2:
+                printf("Was reached\n");
                     if (!isEmpty(stack)) {
                         int next_prec = getPrec(peek(stack));
                         // enqueue the previous next if it was smaller or the same precedence
@@ -93,6 +95,7 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
                             next_prec = getPrec(peek(stack));
                         }
                     }
+                    printf("was this reached");
                     push(stack, tok);
                     break;
                 case 3:
@@ -151,9 +154,8 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
     
 }
 
-int getPrec(const char* tok) 
+int getPrec(char* tok) 
 {
-
     if (strcmp(tok, "+") == 0 || strcmp(tok, "-") == 0) {
         return 1;
     } else if (strcmp(tok, "*") == 0 || strcmp(tok, "/") == 0) {
