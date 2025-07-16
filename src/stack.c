@@ -12,6 +12,9 @@ void allocStack(Stack* stack)
 {
     assert(stack->capacity != 0);
     stack->top = malloc(stack->capacity * sizeof(char*));
+    if (!stack->top) {
+        printf("Stack Error: Failed allocating the pointer");
+    }
 
     for (int i = 0; i < stack->capacity; i++) 
     {
@@ -34,11 +37,10 @@ void push(Stack* stack, char* op)
             resizeStack(stack); 
         }
         index = stack->count;
-        
     }
 
     index = stack->count;
-    memmove(&(stack->top[index]), &op, sizeof(op));
+    strcpy(stack->top[index], op);
     stack->count++;
     
     
@@ -55,7 +57,6 @@ char* pop(Stack* stack)
 
 void resizeStack(Stack* stack) 
 {
-    // make space for twice the number of strings
     stack->capacity *= 2;
     stack->top = realloc(stack->top, stack->capacity * sizeof(char*));
     if (!stack->top) {
@@ -64,7 +65,7 @@ void resizeStack(Stack* stack)
     }
 
     // allocate space for the strings
-    for(int i = stack->count + 1; i < stack->capacity; i++) {
+    for(int i = stack->count; i < stack->capacity; i++) {
         stack->top[i] = malloc(sizeof(char) * STACK_ELEM_SIZE);
         if (!stack->top[i]) {
             printf("Stack Error: failed reallocating memory for a string");
@@ -98,6 +99,7 @@ char* peek(Stack* stack)
     return stack->top[stack->count-1];
 }
 
+// returns true if it is empty
 bool isEmpty(Stack* stack) 
 {
     if (stack->count == -1) return true;

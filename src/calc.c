@@ -22,6 +22,7 @@ typedef enum  {
 int make_OutputQueue(Stack* stack, Queue* outQueue);
 int getPrec(char* tok);
 void cleanStack(Stack* stack, Queue* outQueue);
+void compare_operators(int prec, Stack* stack, Queue* outQueue);
 
 int main(void) 
 {
@@ -58,7 +59,7 @@ int main(void)
 int make_OutputQueue(Stack* stack, Queue* outQueue) 
 {
     const int maxEquation = 1024;
-    char equation[] = malloc(sizeof(char)* maxEquation);
+    char* equation = malloc(sizeof(char)* maxEquation);
     
     int tokCount = 0;
     char* tok;
@@ -85,14 +86,7 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
                 // One of these: *, /, +, -
                 case 1:
                 case 2:
-                    if (!isEmpty(stack)) {
-                        int next_prec = getPrec(peek(stack));
-                        // enqueue the previous next if it was smaller or the same precedence
-                        while (prec <= next_prec && next_prec != 3) {
-                            enQueue(outQueue, pop(stack));
-                            next_prec = getPrec(peek(stack));
-                        }
-                    }
+                    compare_operators(prec, stack, outQueue);
                     push(stack, tok);
                     break;
                 case 3:
@@ -117,7 +111,7 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
             }
                  
         }
-        
+
         printf("tok: %s\n", tok);
         printf("iteration: %d ", tokCount);
         printf("stack is ");
@@ -133,6 +127,7 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
         cleanStack(stack, outQueue);
     }
     
+    // freeStack(&stack);
     return tokCount;
     
 }
@@ -148,7 +143,7 @@ int getPrec(char* tok)
     } else if (strcmp(tok, ")") == 0) {
         return 4;
     }
-    else if (tok[0] == 'Q' || tok[0] == 'q') {
+    else if (strcmp(tok, "Q\n") == 0 || strcmp(tok, "q\n") == 0) {
         return 0;
     }
     else return -1;
@@ -157,7 +152,17 @@ int getPrec(char* tok)
 void cleanStack(Stack* stack, Queue* outQueue) 
 {
     for (int i = stack->count - 1; i > -1; i--) {
-        // printf("stack at top %s ", stack->top[i]);
         enQueue(outQueue, stack->top[i]);
+    }
+}
+
+void compare_operators(int prec, Stack* stack, Queue* outQueue) {
+    if (!isEmpty(stack)) {
+        int next_prec = getPrec(peek(stack));
+    // enqueue the previous next if it was smaller or the same precedence
+        while (prec <= next_prec && next_prec != 3) {
+            enQueue(outQueue, pop(stack));
+            compare_operators(prec, stack, outQueue);
+        }
     }
 }
