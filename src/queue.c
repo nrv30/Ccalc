@@ -10,11 +10,11 @@ const int QUEUE_ELEM_SIZE = 64;
 void allocQueue(Queue* queue) 
 {
     assert(queue->capacity != 0);
-    queue->head_pt = (char**)malloc(sizeof(char*) * queue->capacity);
+    queue->head_pt = malloc(sizeof(char*) * queue->capacity);
 
     for (int i = 0; i < queue->capacity; i++) 
     {
-        queue->head_pt[i] = (char*)malloc(sizeof(char) * QUEUE_ELEM_SIZE);
+        queue->head_pt[i] = malloc(sizeof(char) * QUEUE_ELEM_SIZE);
         if (!queue->head_pt[i]) {
             printf("Queue Error: failed reallocating memory for a string");
             exit(1); 
@@ -42,14 +42,14 @@ void resizeQueue(Queue* queue)
 {
     printf("RESIZE\n");
     queue->capacity *= 2;
-    queue->head_pt = (char**) realloc(queue->head_pt, sizeof(char*) * queue->capacity);
+    queue->head_pt = realloc(queue->head_pt, sizeof(char*) * queue->capacity);
     if (!queue->head_pt) {
         printf("Queue Error: failed reallocating memory for head");
         exit(1);
     }
 
     for(int i = queue->tail; i < queue->capacity; i++) {
-        queue->head_pt[i] = (char*)malloc(sizeof(char) * QUEUE_ELEM_SIZE);
+        queue->head_pt[i] = malloc(sizeof(char) * QUEUE_ELEM_SIZE);
         if (!queue->head_pt[i]) {
             printf("Queue Error: failed reallocating memory for a string");
             exit(1); 

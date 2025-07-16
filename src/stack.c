@@ -15,7 +15,7 @@ void allocStack(Stack* stack)
 
     for (int i = 0; i < stack->capacity; i++) 
     {
-        stack->top[i] = (char*)malloc(sizeof(char) * STACK_ELEM_SIZE);
+        stack->top[i] = malloc(sizeof(char) * STACK_ELEM_SIZE);
         if (!stack->top[i]) {
             printf("Stack Error: failed reallocating memory for a string");
             exit(1); 
@@ -57,7 +57,7 @@ void resizeStack(Stack* stack)
 {
     // make space for twice the number of strings
     stack->capacity *= 2;
-    stack->top = (char**) realloc(stack->top, stack->capacity * sizeof(char*));
+    stack->top = realloc(stack->top, stack->capacity * sizeof(char*));
     if (!stack->top) {
         printf("Stack Error: failed reallocating memory for top");
         exit(1);
@@ -65,7 +65,7 @@ void resizeStack(Stack* stack)
 
     // allocate space for the strings
     for(int i = stack->count + 1; i < stack->capacity; i++) {
-        stack->top[i] = (char*)malloc(sizeof(char) * STACK_ELEM_SIZE);
+        stack->top[i] = malloc(sizeof(char) * STACK_ELEM_SIZE);
         if (!stack->top[i]) {
             printf("Stack Error: failed reallocating memory for a string");
             exit(1); 

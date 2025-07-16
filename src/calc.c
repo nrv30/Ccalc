@@ -58,7 +58,7 @@ int main(void)
 int make_OutputQueue(Stack* stack, Queue* outQueue) 
 {
     const int maxEquation = 1024;
-    char* equation = (char*)malloc(sizeof(char)* maxEquation);
+    char equation[] = malloc(sizeof(char)* maxEquation);
     
     int tokCount = 0;
     char* tok;
@@ -117,21 +117,6 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
             }
                  
         }
-        // if (tokCount == 10) {
-        //     char** p;
-        //     printf("head: %d, tail: %d: ", outQueue->head, outQueue->tail);
-        //     for (int i = outQueue->head; i < outQueue->tail; i++) {
-        //     p = (char** )((outQueue->head_pt) + i);
-        //     assert(p != NULL);
-        //     // printf("%p\n", p);
-        //     }
-
-        //     printf("p = %p, *p = %p\n", (void*)p, (void*)*p);
-        //     // char c = **p;
-        //     // printf("%c", c);
-        //     exit(1);
-
-        // }
         
         printf("tok: %s\n", tok);
         printf("iteration: %d ", tokCount);
