@@ -10,7 +10,7 @@ const int QUEUE_ELEM_SIZE = 64;
 void allocQueue(Queue* queue) 
 {
     assert(queue->capacity != 0);
-    queue->head_pt = (char**)malloc(queue->capacity * sizeof(char*));
+    queue->head_pt = (char**)malloc(sizeof(char*) * queue->capacity);
 
     for (int i = 0; i < queue->capacity; i++) 
     {
@@ -40,9 +40,9 @@ void enQueue(Queue* queue, char* data)
 
 void resizeQueue(Queue* queue) 
 {
-    printf("reached this on iteration %d\n", queue->tail);
+    printf("RESIZE\n");
     queue->capacity *= 2;
-    queue->head_pt = (char**) realloc(queue->head_pt, queue->capacity);
+    queue->head_pt = (char**) realloc(queue->head_pt, sizeof(char*) * queue->capacity);
     if (!queue->head_pt) {
         printf("Queue Error: failed reallocating memory for head");
         exit(1);

@@ -17,15 +17,16 @@ int main(void) {
     assert(queue.head_pt != NULL);
     printf("PASSED: allocating memory\n");
 
-    char* data[] = {
-    strdup("1"), strdup("2"), strdup("3"), strdup("4"), strdup("5"),
-    strdup("6"), strdup("7"), strdup("8"), strdup("9"), strdup("10")
-};
-    for (int i = 0; i < 5; i++) {
-    enQueue(&queue, data[i]);
+    
+    char string [] = "a,b,c,d,e,f,g,h,i,j,k,";
+
+    for (char* data = strtok(string, ","); data != NULL; data = strtok(NULL, ",") ) {
+        // printf("%s ", data);
+        enQueue(&queue, data);
+        printQueue(&queue);
     }
 
-    printQueue(&queue);
-    freeQueue(&queue);    
+    // printQueue(&queue);
+    // freeQueue(&queue);    
     return 0;
 }
