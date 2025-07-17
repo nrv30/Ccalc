@@ -7,7 +7,6 @@
 
 # To-do
 
-* find way of tokenizing tokens not seperated by white-space
+* find way of tokenizing not seperated by white-space
 * test nested parenthesees
 * support negative numbers
-* make 
