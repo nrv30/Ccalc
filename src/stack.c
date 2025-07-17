@@ -105,3 +105,11 @@ bool isEmpty(Stack* stack)
     if (stack->count == -1 || stack->count == 0) return true;
     else return false;
 }
+
+void freeStack(Stack* stack) {
+    for (int i = 0; i < stack->capacity; i++) {
+        free(stack->top[i]);
+    }
+
+    free(stack->top);
+}

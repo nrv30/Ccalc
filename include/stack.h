@@ -16,4 +16,5 @@ void printStack(Stack* stack);
 void resizeStack(Stack* stack);
 char* peek(Stack* stack);
 bool isEmpty(Stack* stack);
+void freeStack(Stack* stack);
 
