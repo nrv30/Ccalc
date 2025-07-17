@@ -111,14 +111,6 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
             }
                  
         }
-
-        printf("tok: %s\n", tok);
-        printf("iteration: %d ", tokCount);
-        printf("stack is ");
-        printStack(stack);
-        printf("queue is ");
-        printQueue(outQueue);
-        printf("------\n");
     }
     free(equation);
 
@@ -128,6 +120,7 @@ int make_OutputQueue(Stack* stack, Queue* outQueue)
     }
     
     // freeStack(&stack);
+    printQueue(outQueue);
     return tokCount;
     
 }
@@ -157,12 +150,18 @@ void cleanStack(Stack* stack, Queue* outQueue)
 }
 
 void compare_operators(int prec, Stack* stack, Queue* outQueue) {
+    int n = stack->count;
+    printf("%d\n", isEmpty(stack));
+
     if (!isEmpty(stack)) {
+        if (n == 0) {
+            printf("was this reached\n");
+        }
         int next_prec = getPrec(peek(stack));
     // enqueue the previous next if it was smaller or the same precedence
-        while (prec <= next_prec && next_prec != 3) {
+        if (prec <= next_prec && next_prec != 3) {
             enQueue(outQueue, pop(stack));
             compare_operators(prec, stack, outQueue);
         }
-    }
+    } return;
 }

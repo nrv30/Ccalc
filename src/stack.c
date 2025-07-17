@@ -102,6 +102,6 @@ char* peek(Stack* stack)
 // returns true if it is empty
 bool isEmpty(Stack* stack) 
 {
-    if (stack->count == -1) return true;
+    if (stack->count == -1 || stack->count == 0) return true;
     else return false;
 }
