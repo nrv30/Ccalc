@@ -43,22 +43,23 @@ int main(void)
         outQueue.tail = -1;
         tokCount = make_OutputQueue(&op_stack, &outQueue); 
     } while (tokCount < minLen || tokCount == -1 || tokCount == 0);
-
+    
     freeStack(&op_stack);
-
+    // freeQueue(&outQueue);
+    
     Stack eval_stack;
     eval_stack.count = -1;
     eval_stack.capacity = 5;
     allocStack(&eval_stack);
-
+    
     double ans = evaluate_postfix(&eval_stack, &outQueue);
-
+    
     freeQueue(&outQueue);
     freeStack(&eval_stack);
-
+    
     printf("%f\n", ans);
     printf(">>\n");
-
+    
     return 0;
 }
 
@@ -131,8 +132,6 @@ int make_OutputQueue(Stack* op_stack, Queue* outQueue)
     equation[strlen(equation)-1] = '\0';
     if (equation == NULL) exit(1);
 
-    printf("%s\n", equation);
-
     for( tok = strtok_r(equation," ", &equation); tok!=NULL ; tok=strtok_r(NULL," ", &equation)) {
         tokCount++;
         float num;
@@ -144,6 +143,7 @@ int make_OutputQueue(Stack* op_stack, Queue* outQueue)
             {
                 // One of these: *, /, +, -
                 case 1:
+                case 2:
                     compare_operators(prec, op_stack, outQueue);
                     push(op_stack, tok);
                     break;
@@ -179,13 +179,12 @@ int make_OutputQueue(Stack* op_stack, Queue* outQueue)
     
 }
 
-
-
 int getPrec(char* tok) 
 {
-    if (strcmp(tok, "+") == 0 || strcmp(tok, "-") == 0 || 
-        strcmp(tok, "*") == 0 || strcmp(tok, "/") == 0) {
-        return 1;
+    if (strcmp(tok, "+") == 0 || strcmp(tok, "-") == 0) {
+        return 1; 
+    } else if (strcmp(tok, "*") == 0 || strcmp(tok, "/") == 0) {
+        return 2;
     } else if (strcmp(tok, "(") == 0) {
         return 3;
     } else if (strcmp(tok, ")") == 0) {

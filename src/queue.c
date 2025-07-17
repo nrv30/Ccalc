@@ -40,7 +40,6 @@ void enQueue(Queue* queue, char* data)
 
 void resizeQueue(Queue* queue) 
 {
-    printf("RESIZE\n");
     queue->capacity *= 2;
     queue->head_pt = realloc(queue->head_pt, sizeof(char*) * queue->capacity);
     if (!queue->head_pt) {
