@@ -1,11 +1,13 @@
-# In progress
+# Features
 
-* implemented first part of shunting yard algorithim
-* all tokens must be seperated by whitespace
+* implementation of simple shunting yard algorithim
+    * <https://www.youtube.com/watch?v=ceu-7gV1wd0&t=2512s>
+    * Handles User input error gracefully (mostly)
+    * supports basic operations +,-,*,/
 
-# TODO
+# To-do
 
-* evaluate postfix expression
-* better way of tokenizing
+* find way of tokenizing tokens not seperated by white-space
 * test nested parenthesees
-* support negative numbers 
+* support negative numbers
+* make 
